@@ -1,5 +1,5 @@
 # Stage 1: Builder
-FROM node:21.7-alpine AS builder
+FROM node:21.7 AS builder
 
 # Update package repositories and install necessary build dependencies
 RUN apk update && \
@@ -33,7 +33,7 @@ RUN npm ci
 RUN npm run build
 
 # Stage 2: Runner
-FROM node:21.7-alpine AS runner
+FROM node:21.7 AS runner
 
 # Set the working directory in the runner stage
 WORKDIR /app
