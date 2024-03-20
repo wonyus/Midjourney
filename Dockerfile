@@ -16,7 +16,7 @@ COPY . .
 ENV NODE_ENV production
 
 # Install npm dependencies
-RUN npm i
+RUN npm install
 
 # Build the TypeScript application
 RUN npm run build
