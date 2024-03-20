@@ -1,6 +1,6 @@
 # Stage 1: Builder
 FROM node:21.7-alpine AS builder
-
+RUN corepack enable
 # Update package repositories and install necessary build dependencies
 RUN apk update && \
     apk add --update --no-cache \
