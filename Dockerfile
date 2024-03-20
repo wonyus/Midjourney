@@ -2,7 +2,8 @@
 FROM node:21.7-alpine AS builder
 
 # Update package repositories and install necessary build dependencies
-RUN apt-get update && apt-get install -y \
+RUN apk update && \
+    apk add --no-cache \
     python \
     g++ \
     make \
