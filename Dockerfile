@@ -1,9 +1,21 @@
 # Stage 1: Builder
 FROM node:21.7-alpine AS builder
 
-RUN apk update
-# Install necessary build dependencies
-RUN apk add --no-cache python g++ build-base cairo-dev jpeg-dev pango-dev musl-dev giflib-dev pixman-dev pangomm-dev libjpeg-turbo-dev freetype-dev
+# Update package repositories and install necessary build dependencies
+RUN apk update && \
+    apk add --no-cache --verbose \
+    python \
+    g++ \
+    build-base \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    musl-dev \
+    giflib-dev \
+    pixman-dev \
+    pangomm-dev \
+    libjpeg-turbo-dev \
+    freetype-dev
 
 # Set the working directory in the builder stage
 WORKDIR /app
