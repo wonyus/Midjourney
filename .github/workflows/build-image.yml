@@ -1,0 +1,64 @@
+name: build image
+
+on:
+  push:
+    branches: ["master"]
+    # paths: ["src/**", "package.json"]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: commit
+        uses: prompt/actions-commit-hash@v3
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout env
+        uses: actions/checkout@v4
+        with:
+          repository: wonyus/ci
+          ref: main
+          token: ${{ secrets.PAT }}
+          sparse-checkout: |
+            IMGGEN/config.ts
+          path: src
+
+      - name: Get last tag
+        id: get_last_tag
+        run: echo "GIT_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples.md#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
+          path: |
+            ~/.yarn
+            ${{ github.workspace }}/.next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: wonyus/imggen:latest, wonyus/imggen:${{ steps.commit.outputs.short }}
