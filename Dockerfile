@@ -1,6 +1,7 @@
 # Stage 1: Builder
 FROM node:21.7-alpine AS builder
 
+RUN RUN apk update
 # Install necessary build dependencies
 RUN apk add --no-cache \
     python \
