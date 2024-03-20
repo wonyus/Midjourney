@@ -3,7 +3,8 @@ FROM node:21.7-alpine AS builder
 RUN corepack enable
 # Update package repositories and install necessary build dependencies
 RUN apk update 
-RUN apk add --no-cache python3 make g++
+RUN apk add --no-cache python3 make g++ cairo-dev jpeg-dev pango-dev musl-dev giflib-dev pixman-dev pangomm-dev libjpeg-turbo-dev freetype-dev
+
 
 # Set the working directory in the builder stage
 WORKDIR /app
@@ -15,7 +16,7 @@ COPY . .
 ENV NODE_ENV production
 
 # Install npm dependencies
-RUN npm ci
+RUN npm i
 
 # Build the TypeScript application
 RUN npm run build
