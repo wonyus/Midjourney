@@ -3,7 +3,7 @@ FROM node:21.7-alpine AS builder
 
 # Update package repositories and install necessary build dependencies
 RUN apk update && \
-    apk add --no-cache \
+    apk add --update --no-cache \
     python \
     g++ \
     make \
