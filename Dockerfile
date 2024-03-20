@@ -10,6 +10,8 @@ COPY . .
 # Set NODE_ENV to 'production'
 ENV NODE_ENV production
 
+RUN npm i
+
 # Build the TypeScript application in the builder stage
 RUN npm run build
 
@@ -19,7 +21,7 @@ FROM node:21.7-alpine AS runner
 # Set the working directory in the runner stage
 WORKDIR /app
 
-COPY --from=builder /app/package.json /app/yarn.lock ./
+COPY --from=builder /app/package.json /app/package-lock.json ./
 
 COPY --from=builder /app/node_modules ./node_modules
 
