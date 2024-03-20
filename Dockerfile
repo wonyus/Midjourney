@@ -2,20 +2,8 @@
 FROM node:21.7-alpine AS builder
 RUN corepack enable
 # Update package repositories and install necessary build dependencies
-RUN apk update && \
-    apk add --update --no-cache \
-    python \
-    g++ \
-    make \
-    cairo-dev \
-    jpeg-dev \
-    pango-dev \
-    musl-dev \
-    giflib-dev \
-    pixman-dev \
-    pangomm-dev \
-    libjpeg-turbo-dev \
-    freetype-dev
+RUN apk update 
+RUN apk add --no-cache python3 make g++
 
 # Set the working directory in the builder stage
 WORKDIR /app
